@@ -1,4 +1,4 @@
-package com.kirylshreyter.templatenotesapi.controller;
+package com.kirylshreyter.templatenotesapi.controller.v1;
 
 import com.kirylshreyter.templatenotesapi.assembler.UserModelAssembler;
 import com.kirylshreyter.templatenotesapi.model.User;
@@ -17,6 +17,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
+@RequestMapping("/api/v1")
 public class UserController {
     private final UserRepository repository;
     private final UserModelAssembler assembler;
@@ -71,6 +72,9 @@ public class UserController {
 
     @DeleteMapping("/users/{id}")
     ResponseEntity<?> deleteUser(@PathVariable Long id) {
+        if (!repository.existsById(id)) {
+            throw new UserNotFoundException(id);
+        }
         repository.deleteById(id);
         return ResponseEntity.noContent().build();
     }

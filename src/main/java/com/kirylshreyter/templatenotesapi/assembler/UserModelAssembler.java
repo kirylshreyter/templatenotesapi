@@ -1,6 +1,6 @@
 package com.kirylshreyter.templatenotesapi.assembler;
 
-import com.kirylshreyter.templatenotesapi.controller.UserController;
+import com.kirylshreyter.templatenotesapi.controller.v1.UserController;
 import com.kirylshreyter.templatenotesapi.model.User;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
