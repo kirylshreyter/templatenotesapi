@@ -1,25 +1,23 @@
 package com.kirylshreyter.templatenotesapi.model;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
 @Table(name = "users")
 public class User {
-    private @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_generator") Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_generator")
+    private Long id;
+
+    @Column(unique = true)
     private String email;
-    private String pictureUrl;
-    private String locale;
-    private String firstName;
-    private String lastName;
 
-    public User() {
-    }
-
-    public User(String email) {
-        this.email = email;
-    }
+    private String name;
+    private String hashedPassword;
+    private Date createdAt;
+    private Date updatedAt;
 
     public Long getId() {
         return id;
@@ -37,36 +35,36 @@ public class User {
         this.email = email;
     }
 
-    public String getPictureUrl() {
-        return pictureUrl;
+    public String getName() {
+        return name;
     }
 
-    public void setPictureUrl(String pictureUrl) {
-        this.pictureUrl = pictureUrl;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getLocale() {
-        return locale;
+    public String getHashedPassword() {
+        return hashedPassword;
     }
 
-    public void setLocale(String locale) {
-        this.locale = locale;
+    public void setHashedPassword(String hashedPassword) {
+        this.hashedPassword = hashedPassword;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public String getLastName() {
-        return lastName;
+    public Date getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     @Override
@@ -74,12 +72,12 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return getId().equals(user.getId()) && getEmail().equals(user.getEmail()) && Objects.equals(getPictureUrl(), user.getPictureUrl()) && Objects.equals(getLocale(), user.getLocale()) && getFirstName().equals(user.getFirstName()) && getLastName().equals(user.getLastName());
+        return getId().equals(user.getId()) && getEmail().equals(user.getEmail()) && Objects.equals(getName(), user.getName()) && Objects.equals(getHashedPassword(), user.getHashedPassword()) && Objects.equals(getCreatedAt(), user.getCreatedAt()) && Objects.equals(getUpdatedAt(), user.getUpdatedAt());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getEmail(), getPictureUrl(), getLocale(), getFirstName(), getLastName());
+        return Objects.hash(getId(), getEmail(), getName(), getHashedPassword(), getCreatedAt(), getUpdatedAt());
     }
 
     @Override
@@ -87,10 +85,10 @@ public class User {
         return "User{" +
                 "id=" + id +
                 ", email='" + email + '\'' +
-                ", pictureUrl='" + pictureUrl + '\'' +
-                ", locale='" + locale + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
+                ", name='" + name + '\'' +
+                ", hashedPassword='" + hashedPassword + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
                 '}';
     }
 }
