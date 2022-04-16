@@ -9,11 +9,15 @@ public class User {
     private @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_generator") Long id;
     private String email;
+    private String pictureUrl;
+    private String locale;
+    private String firstName;
+    private String lastName;
 
-    User() {
+    public User() {
     }
 
-    User(String email) {
+    public User(String email) {
         this.email = email;
     }
 
@@ -33,17 +37,49 @@ public class User {
         this.email = email;
     }
 
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
+
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
+    }
+
+    public String getLocale() {
+        return locale;
+    }
+
+    public void setLocale(String locale) {
+        this.locale = locale;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return getId().equals(user.getId()) && getEmail().equals(user.getEmail());
+        return getId().equals(user.getId()) && getEmail().equals(user.getEmail()) && Objects.equals(getPictureUrl(), user.getPictureUrl()) && Objects.equals(getLocale(), user.getLocale()) && getFirstName().equals(user.getFirstName()) && getLastName().equals(user.getLastName());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getEmail());
+        return Objects.hash(getId(), getEmail(), getPictureUrl(), getLocale(), getFirstName(), getLastName());
     }
 
     @Override
@@ -51,6 +87,10 @@ public class User {
         return "User{" +
                 "id=" + id +
                 ", email='" + email + '\'' +
+                ", pictureUrl='" + pictureUrl + '\'' +
+                ", locale='" + locale + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
                 '}';
     }
 }

@@ -2,8 +2,8 @@ package com.kirylshreyter.templatenotesapi.controller.v1;
 
 import com.kirylshreyter.templatenotesapi.assembler.UserModelAssembler;
 import com.kirylshreyter.templatenotesapi.model.User;
-import com.kirylshreyter.templatenotesapi.exception.UserNotFoundException;
-import com.kirylshreyter.templatenotesapi.repository.UserRepository;
+import com.kirylshreyter.templatenotesapi.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
@@ -19,17 +19,15 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RestController
 @RequestMapping("/api/v1")
 public class UserController {
-    private final UserRepository repository;
-    private final UserModelAssembler assembler;
+    @Autowired
+    private UserService userService;
 
-    UserController(UserRepository repository, UserModelAssembler assembler) {
-        this.repository = repository;
-        this.assembler = assembler;
-    }
+    @Autowired
+    private UserModelAssembler assembler;
 
     @GetMapping("/users")
     public CollectionModel<EntityModel<User>> all() {
-        List<EntityModel<User>> users = repository.findAll().stream()
+        List<EntityModel<User>> users = userService.getAllUsers().stream()
                 .map(assembler::toModel)
                 .collect(Collectors.toList());
 
@@ -38,44 +36,24 @@ public class UserController {
 
     @PostMapping("/users")
     ResponseEntity<?> newUser(@RequestBody User newUser) {
-        EntityModel<User> entityModel = assembler.toModel(repository.save(newUser));
-        return ResponseEntity
-                .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
-                .body(entityModel);
+        EntityModel<User> entityModel = assembler.toModel(userService.saveUser(newUser));
+        return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
     }
 
     @GetMapping("/users/{id}")
     public EntityModel<User> one(@PathVariable Long id) {
-        User user = repository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(id));
-
-        return assembler.toModel(user);
+        return assembler.toModel(userService.getUserById(id));
     }
 
     @PutMapping("/users/{id}")
     ResponseEntity<?> replaceUser(@RequestBody User newUser, @PathVariable Long id) {
-        User updatedUser = repository.findById(id)
-                .map(user -> {
-                    user.setEmail(newUser.getEmail());
-                    return repository.save(user);
-                })
-                .orElseGet(() -> {
-                    newUser.setId(id);
-                    return repository.save(newUser);
-                });
-        EntityModel<User> entityModel = assembler.toModel(updatedUser);
-
-        return ResponseEntity
-                .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
-                .body(entityModel);
+        EntityModel<User> entityModel = assembler.toModel(userService.updateUserById(id, newUser));
+        return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
     }
 
     @DeleteMapping("/users/{id}")
     ResponseEntity<?> deleteUser(@PathVariable Long id) {
-        if (!repository.existsById(id)) {
-            throw new UserNotFoundException(id);
-        }
-        repository.deleteById(id);
+        userService.deleteUserById(id);
         return ResponseEntity.noContent().build();
     }
 }
