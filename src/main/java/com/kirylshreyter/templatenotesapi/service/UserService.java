@@ -11,9 +11,13 @@ public interface UserService {
 
     User getUserById(Long id);
 
+    User getUserByEmail(String email);
+
     User updateUserById(Long id, User newUser);
 
     User updateUserByEmail(String email, User newUser);
 
     void deleteUserById(Long id);
+
+    boolean existsByEmail(String email);
 }

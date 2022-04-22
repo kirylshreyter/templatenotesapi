@@ -1,23 +1,46 @@
 package com.kirylshreyter.templatenotesapi.model;
 
+import com.kirylshreyter.templatenotesapi.annotation.UserEmailUnique;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
 
 @Entity
 @Table(name = "users")
+@EntityListeners(AuditingEntityListener.class)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_generator")
     private Long id;
 
     @Column(unique = true)
+    @UserEmailUnique
     private String email;
 
     private String name;
-    private String hashedPassword;
+    private String encodedPassword;
+
+    @CreatedDate
     private Date createdAt;
+
+    @LastModifiedDate
     private Date updatedAt;
+
+    @Column(columnDefinition = "boolean default true", nullable = false)
+    private Boolean active;
+
+    @Column(columnDefinition = "boolean default false", nullable = false)
+    private Boolean expired;
+
+    @Column(columnDefinition = "boolean default false", nullable = false)
+    private Boolean credentialsExpired;
+
+    @Column(columnDefinition = "boolean default false", nullable = false)
+    private Boolean locked;
 
     public Long getId() {
         return id;
@@ -43,12 +66,12 @@ public class User {
         this.name = name;
     }
 
-    public String getHashedPassword() {
-        return hashedPassword;
+    public String getEncodedPassword() {
+        return encodedPassword;
     }
 
-    public void setHashedPassword(String hashedPassword) {
-        this.hashedPassword = hashedPassword;
+    public void setEncodedPassword(String encodedPassword) {
+        this.encodedPassword = encodedPassword;
     }
 
     public Date getCreatedAt() {
@@ -67,17 +90,49 @@ public class User {
         this.updatedAt = updatedAt;
     }
 
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public Boolean getExpired() {
+        return expired;
+    }
+
+    public void setExpired(Boolean expired) {
+        this.expired = expired;
+    }
+
+    public Boolean getCredentialsExpired() {
+        return credentialsExpired;
+    }
+
+    public void setCredentialsExpired(Boolean credentialsExpired) {
+        this.credentialsExpired = credentialsExpired;
+    }
+
+    public Boolean getLocked() {
+        return locked;
+    }
+
+    public void setLocked(Boolean locked) {
+        this.locked = locked;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return getId().equals(user.getId()) && getEmail().equals(user.getEmail()) && Objects.equals(getName(), user.getName()) && Objects.equals(getHashedPassword(), user.getHashedPassword()) && Objects.equals(getCreatedAt(), user.getCreatedAt()) && Objects.equals(getUpdatedAt(), user.getUpdatedAt());
+        return getEmail().equals(user.getEmail()) && getName().equals(user.getName());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getEmail(), getName(), getHashedPassword(), getCreatedAt(), getUpdatedAt());
+        return Objects.hash(getEmail(), getName());
     }
 
     @Override
@@ -86,9 +141,13 @@ public class User {
                 "id=" + id +
                 ", email='" + email + '\'' +
                 ", name='" + name + '\'' +
-                ", hashedPassword='" + hashedPassword + '\'' +
+                ", hashedPassword='" + encodedPassword + '\'' +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
+                ", active=" + active +
+                ", expired=" + expired +
+                ", credentialsExpired=" + credentialsExpired +
+                ", locked=" + locked +
                 '}';
     }
 }

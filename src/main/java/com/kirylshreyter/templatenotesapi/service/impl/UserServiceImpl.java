@@ -30,10 +30,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getUserByEmail(String email) {
+        return repository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
+    }
+
+    @Override
     public User updateUserById(Long id, User newUser) {
         return repository.findById(id)
                 .map(user -> {
                     user.setEmail(newUser.getEmail());
+                    user.setActive(newUser.getActive());
                     return repository.save(user);
                 })
                 .orElseGet(() -> repository.save(newUser));
@@ -53,5 +59,10 @@ public class UserServiceImpl implements UserService {
     public void deleteUserById(Long id) {
         if (!repository.existsById(id)) throw new UserNotFoundException(id);
         repository.deleteById(id);
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return repository.existsByEmail(email);
     }
 }
