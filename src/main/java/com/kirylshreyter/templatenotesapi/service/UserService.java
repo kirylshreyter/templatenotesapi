@@ -1,6 +1,7 @@
 package com.kirylshreyter.templatenotesapi.service;
 
 import com.kirylshreyter.templatenotesapi.model.User;
+import com.kirylshreyter.templatenotesapi.model.VerificationToken;
 
 import java.util.List;
 
@@ -20,4 +21,8 @@ public interface UserService {
     void deleteUserById(Long id);
 
     boolean existsByEmail(String email);
+
+    void createVerificationToken(User user, String token);
+
+    VerificationToken getVerificationToken(String VerificationToken);
 }

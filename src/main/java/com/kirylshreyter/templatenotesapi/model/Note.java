@@ -10,8 +10,10 @@ import java.util.Objects;
 @Entity
 @Table(name = "notes")
 public class Note {
-    private @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "note_generator") Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "note_generator")
+    private Long id;
+
     private String body;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

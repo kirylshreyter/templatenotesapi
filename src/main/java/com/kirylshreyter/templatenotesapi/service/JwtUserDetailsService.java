@@ -20,7 +20,7 @@ public class JwtUserDetailsService implements UserDetailsService {
         return new User(
                 email,
                 user.getEncodedPassword(),
-                user.getActive(),
+                user.getEnabled(),
                 !user.getExpired(),
                 !user.getCredentialsExpired(),
                 !user.getLocked(),

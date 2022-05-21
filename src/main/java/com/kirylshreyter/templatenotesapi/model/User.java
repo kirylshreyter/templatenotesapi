@@ -1,11 +1,13 @@
 package com.kirylshreyter.templatenotesapi.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kirylshreyter.templatenotesapi.annotation.UserEmailUnique;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.Objects;
 
@@ -21,7 +23,10 @@ public class User {
     @UserEmailUnique
     private String email;
 
+    @NotNull
     private String name;
+
+    @JsonIgnore
     private String encodedPassword;
 
     @CreatedDate
@@ -30,17 +35,17 @@ public class User {
     @LastModifiedDate
     private Date updatedAt;
 
-    @Column(columnDefinition = "boolean default true", nullable = false)
-    private Boolean active;
+    @Column(columnDefinition = "boolean default false", nullable = false)
+    private boolean enabled;
 
     @Column(columnDefinition = "boolean default false", nullable = false)
-    private Boolean expired;
+    private boolean expired;
 
     @Column(columnDefinition = "boolean default false", nullable = false)
-    private Boolean credentialsExpired;
+    private boolean credentialsExpired;
 
     @Column(columnDefinition = "boolean default false", nullable = false)
-    private Boolean locked;
+    private boolean locked;
 
     public Long getId() {
         return id;
@@ -90,12 +95,12 @@ public class User {
         this.updatedAt = updatedAt;
     }
 
-    public Boolean getActive() {
-        return active;
+    public Boolean getEnabled() {
+        return enabled;
     }
 
-    public void setActive(Boolean active) {
-        this.active = active;
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 
     public Boolean getExpired() {
@@ -144,7 +149,7 @@ public class User {
                 ", hashedPassword='" + encodedPassword + '\'' +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
-                ", active=" + active +
+                ", active=" + enabled +
                 ", expired=" + expired +
                 ", credentialsExpired=" + credentialsExpired +
                 ", locked=" + locked +

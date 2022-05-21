@@ -2,7 +2,9 @@ package com.kirylshreyter.templatenotesapi.service.impl;
 
 import com.kirylshreyter.templatenotesapi.exception.UserNotFoundException;
 import com.kirylshreyter.templatenotesapi.model.User;
+import com.kirylshreyter.templatenotesapi.model.VerificationToken;
 import com.kirylshreyter.templatenotesapi.repository.UserRepository;
+import com.kirylshreyter.templatenotesapi.repository.VerificationTokenRepository;
 import com.kirylshreyter.templatenotesapi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,9 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository repository;
+
+    @Autowired
+    private VerificationTokenRepository tokenRepository;
 
     @Override
     public List<User> getAllUsers() {
@@ -39,7 +44,7 @@ public class UserServiceImpl implements UserService {
         return repository.findById(id)
                 .map(user -> {
                     user.setEmail(newUser.getEmail());
-                    user.setActive(newUser.getActive());
+                    user.setEnabled(newUser.getEnabled());
                     return repository.save(user);
                 })
                 .orElseGet(() -> repository.save(newUser));
@@ -64,5 +69,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean existsByEmail(String email) {
         return repository.existsByEmail(email);
+    }
+
+    @Override
+    public void createVerificationToken(User user, String token) {
+        VerificationToken myToken = new VerificationToken(user, token);
+        tokenRepository.save(myToken);
+    }
+
+    @Override
+    public VerificationToken getVerificationToken(String verificationToken) {
+        return tokenRepository.findByToken(verificationToken);
     }
 }

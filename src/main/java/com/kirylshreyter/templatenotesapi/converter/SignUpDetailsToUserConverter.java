@@ -12,10 +12,6 @@ public class SignUpDetailsToUserConverter implements Converter<SignUpDetails, Us
         user.setEmail(source.getEmail());
         user.setName(source.getName());
         user.setEncodedPassword(new BCryptPasswordEncoder().encode(source.getPassword()));
-        user.setActive(true);
-        user.setExpired(false);
-        user.setCredentialsExpired(false);
-        user.setLocked(false);
         return user;
     }
 }
